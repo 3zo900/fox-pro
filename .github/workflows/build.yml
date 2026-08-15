@@ -14,9 +14,9 @@ jobs:
           flutter-version: '3.22.3'
       - name: Build APK
         run: |
-          cp lib/main.dart /tmp/m.dart
-          flutter create. --platforms=android --project-name fox_pro
-          cp /tmp/m.dart lib/main.dart
+          cp lib/main.dart /tmp/main.dart.bak
+          flutter create. --platforms android
+          cp /tmp/main.dart.bak lib/main.dart
           flutter pub get
           flutter build apk --release --no-tree-shake-icons
       - name: Upload APK
