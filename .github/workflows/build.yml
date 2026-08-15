@@ -1,4 +1,4 @@
-name: Build FOX PRO APK
+name: Build FOX PRO APK Fixed
 on: [push]
 jobs:
   build:
@@ -12,16 +12,19 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.32.0'
+          channel: 'stable'
       - name: Build APK
         run: |
+          mkdir -p assets
           cp lib/main.dart /tmp/m.dart
-          flutter create . --project-name fox_pro --platforms android --org com.foxpro.app
+          rm -rf android.dart_tool build
+          flutter create --platforms=android. --project-name fox_pro
           cp /tmp/m.dart lib/main.dart
-          flutter pub add supabase_flutter video_player chewie
+          flutter clean
           flutter pub get
           flutter build apk --release --no-tree-shake-icons
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOX-PRO-APK
+          name: FOX-PRO-APK-FIXED
           path: build/app/outputs/flutter-apk/app-release.apk
