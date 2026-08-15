@@ -17,8 +17,8 @@ jobs:
         run: |
           mkdir -p assets
           cp lib/main.dart /tmp/m.dart
-          rm -rf android.dart_tool build
-          flutter create --platforms=android --project-name fox_pro.
+          rm -rf android .dart_tool build
+          flutter create --platforms=android --project-name fox_pro .
           cp /tmp/m.dart lib/main.dart
           flutter clean
           flutter pub get
