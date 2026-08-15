@@ -49,12 +49,11 @@ class _AutoActivationPageState extends State<AutoActivationPage> {
     try {
       final deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
-      final id = androidInfo.id?? androidInfo.androidId?? '';
+      final String id = androidInfo.id;
       if (id.isNotEmpty) {
         int hash = id.hashCode.abs();
         String stable = 'FOX-${(hash % 9000000 + 1000000).toString()}';
         await prefs.setString('device_id_stable', stable);
-        await prefs.setString('android_id', id);
         return stable;
       }
     } catch (e) {}
@@ -108,11 +107,7 @@ class _AutoActivationPageState extends State<AutoActivationPage> {
           return;
         } else {
           setState(() {
-            if (data['expired'] == true) {
-              status = 'انتهى اشتراكك يوم ${data['expiry']} - جدد من الموزع';
-            } else {
-              status = 'الجهاز غير مفعل\nانسخ الكود وارسله للموزع';
-            }
+            status = 'الجهاز غير مفعل\nانسخ الكود وارسله للموزع';
             isLoading = false;
           });
           return;
@@ -124,16 +119,6 @@ class _AutoActivationPageState extends State<AutoActivationPage> {
         isLoading = false;
       });
     }
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('is_activated') == true) {
-      final m3u = prefs.getString('m3u_url')?? '';
-      final expiry = prefs.getString('expiry')?? '';
-      if (m3u.isNotEmpty) {
-        if (!mounted) return;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomePage(m3u: m3u, deviceId: idToCheck, subscriptions: [], expiry: expiry, plan: 'year')));
-        return;
-      }
-    }
     setState(() => isLoading = false);
   }
 
@@ -144,20 +129,17 @@ class _AutoActivationPageState extends State<AutoActivationPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.live_tv, size: 80, color: Color(0xFFFF6B00)),
               const SizedBox(height: 16),
               const Text('FOX PRO', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Text('التفعيل التلقائي', style: TextStyle(color: Colors.grey)),
               const SizedBox(height: 32),
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFFF6B00), width: 1)),
+                decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFFF6B00))),
                 child: Column(
                   children: [
-                    const Text('كود جهازك الثابت (ما يتغير):', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    const Text('كود جهازك الثابت:', style: TextStyle(color: Colors.grey, fontSize: 12)),
                     const SizedBox(height: 8),
                     SelectableText(deviceId, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
                     const SizedBox(height: 12),
@@ -181,16 +163,11 @@ class _AutoActivationPageState extends State<AutoActivationPage> {
               ] else...[
                 Text(status, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white70, fontSize: 13)),
                 const SizedBox(height: 20),
-                const Divider(color: Colors.white10),
-                const SizedBox(height: 10),
-                const Text('اذا حذفت التطبيق ورجع الرقم؟', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
                 TextField(
                   controller: manualIdController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: 'ادخل كودك القديم',
-                    hintText: 'FOX-3860373',
+                    labelText: 'ادخل كودك القديم FOX-3860373',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     filled: true,
                     fillColor: Colors.black,
@@ -254,9 +231,9 @@ class HomePage extends StatelessWidget {
             ])),
             const SizedBox(height: 16),
             Expanded(child: ListView.builder(itemCount: subscriptions.isEmpty? 1 : subscriptions.length, itemBuilder: (c,i){
-              if(subscriptions.isEmpty) return Card(color: const Color(0xFF1a1a1a), child: ListTile(title: const Text('الرئيسي'), subtitle: SelectableText(m3u, style: const TextStyle(fontSize: 10, color: Colors.grey))));
+              if(subscriptions.isEmpty) return Card(color: const Color(0xFF1a1a1a), child: ListTile(title: const Text('الرئيسي'), subtitle: SelectableText(m3u, style: const TextStyle(fontSize: 10))));
               final sub = subscriptions[i];
-              return Card(color: const Color(0xFF1a1a1a), child: ListTile(title: Text(sub['name']?? 'اشتراك $i'), subtitle: SelectableText(sub['m3u']?? '', style: const TextStyle(fontSize: 9, color: Colors.grey))));
+              return Card(color: const Color(0xFF1a1a1a), child: ListTile(title: Text(sub['name']?? 'اشتراك'), subtitle: SelectableText(sub['m3u']?? '', style: const TextStyle(fontSize: 9))));
             })),
           ],
         ),
