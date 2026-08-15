@@ -15,8 +15,9 @@ jobs:
       - name: Build APK
         run: |
           cp lib/main.dart /tmp/m.dart
-          flutter create . --platforms android
+          flutter create . --project-name fox_pro --platforms android --org com.foxpro.app
           cp /tmp/m.dart lib/main.dart
+          flutter pub add supabase_flutter video_player chewie
           flutter pub get
           flutter build apk --release --no-tree-shake-icons
       - name: Upload APK
