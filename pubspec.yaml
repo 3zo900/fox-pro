@@ -1,15 +1,13 @@
 name: fox_pro
-description: FOX PRO Player - IPTV Player
+description: FOX PRO IPTV - Fixed Device ID
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.5.6
-  video_player: ^2.8.2
-  chewie: ^1.8.1
+  shared_preferences: ^2.2.2
   cupertino_icons: ^1.0.2
 flutter:
   uses-material-design: true
