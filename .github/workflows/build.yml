@@ -15,11 +15,12 @@ jobs:
       - name: Build APK
         run: |
           mv lib/main.dart /tmp/m.dart
-          flutter create --platforms=android --project-name fox_pro.
+          flutter create. --platforms=android --project-name fox_pro
           mv /tmp/m.dart lib/main.dart
           flutter pub get
-          flutter build apk --release
-      - uses: actions/upload-artifact@v4
+          flutter build apk --release --no-tree-shake-icons
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: FOX-PRO-APK
           path: build/app/outputs/flutter-apk/app-release.apk
